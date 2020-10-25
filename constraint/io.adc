@@ -18,20 +18,4 @@ set_pin_assignment {segmentE} 	{ LOCATION = A14; }
 set_pin_assignment {segmentF} 	{ LOCATION = B15; }
 set_pin_assignment {segmentG} 	{ LOCATION = B16; }
 
-#set_pin_assignment {swA[0]} 	{ LOCATION = C16; PULLTYPE = PULLDOWN; }
-#set_pin_assignment {swA[1]} 	{ LOCATION = C15; PULLTYPE = PULLDOWN; }
-#set_pin_assignment {swA[2]} 	{ LOCATION = E16; PULLTYPE = PULLDOWN; }
-#set_pin_assignment {swA[3]} 	{ LOCATION = F16; PULLTYPE = PULLDOWN; }
-#set_pin_assignment {swA[4]} 	{ LOCATION = L10; PULLTYPE = PULLDOWN; }
-#set_pin_assignment {swA[5]} 	{ LOCATION = N11; PULLTYPE = PULLDOWN; }
-#set_pin_assignment {swA[6]} 	{ LOCATION = P2; PULLTYPE = PULLDOWN; }
-#set_pin_assignment {swA[7]} 	{ LOCATION = R2; PULLTYPE = PULLDOWN; }
-
-#set_pin_assignment {swB[0]} 	{ LOCATION = P12; PULLTYPE = PULLDOWN; }
-#set_pin_assignment {swB[1]} 	{ LOCATION = N12; PULLTYPE = PULLDOWN; }
-#set_pin_assignment {swB[2]} 	{ LOCATION = R16; PULLTYPE = PULLDOWN; }
-#set_pin_assignment {swB[3]} 	{ LOCATION = M12; PULLTYPE = PULLDOWN; }
-#set_pin_assignment {swB[4]} 	{ LOCATION = C9; PULLTYPE = PULLDOWN; }
-#set_pin_assignment {swB[5]} 	{ LOCATION = B10; PULLTYPE = PULLDOWN; }
-#set_pin_assignment {swB[6]} 	{ LOCATION = R7; PULLTYPE = PULLDOWN; }
-#set_pin_assignment {swB[7]} 	{ LOCATION = H13; PULLTYPE = PULLDOWN; }
+set_pin_assignment {display_switch} { LOCATION = M12; PULLTYPE = PULLDOWN; }

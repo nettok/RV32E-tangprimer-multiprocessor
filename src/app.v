@@ -8,6 +8,8 @@ module app(
 	input clk,
     input reset,
     
+    input display_switch,
+    
     output [2:0] rgb_led,
     
     output wire digit_anode1,
@@ -51,6 +53,27 @@ module app(
         .data_bus(program_data_bus)
     );
     
+    // cycles counter
+    
+    reg [15:0] cycles_counter;
+    wire done = o2[0];
+    
+    always @(posedge clk) begin
+    	if (reset == 0)  cycles_counter <= 0;
+    	else if (~done) cycles_counter <= cycles_counter + 1;
+    end
+    
+    // display data switch (result counter / cpu cycles counter)
+    
+    wire [15:0] display_output;
+    
+    assign display_output = {
+	    display_switch ? cycles_counter[15:12] : {3'b000, done},
+	  	display_switch ? cycles_counter[11:8]  : 4'b0000,
+	  	display_switch ? cycles_counter[7:4]   : o1[7:4],
+	  	display_switch ? cycles_counter[3:0]   : o1[3:0]
+    };
+    
     // Clock is 24Mhz
 	localparam five_millis = 'd120_000;
 	localparam one_second = 'd24_000_000;
@@ -62,10 +85,10 @@ module app(
 	wire [6:0] digit3_out;
 	wire [6:0] digit4_out;
 	
-	hex_to_7segment digit1_converter (o2[7:4], digit1_out);
-	hex_to_7segment digit2_converter (o2[3:0], digit2_out);
-	hex_to_7segment digit3_converter (o1[7:4], digit3_out);
-	hex_to_7segment digit4_converter (o1[3:0], digit4_out);
+	hex_to_7segment digit1_converter (display_output[15:12], digit1_out);
+	hex_to_7segment digit2_converter (display_output[11:8], digit2_out);
+	hex_to_7segment digit3_converter (display_output[7:4], digit3_out);
+	hex_to_7segment digit4_converter (display_output[3:0], digit4_out);
 	
 	// Display
 	

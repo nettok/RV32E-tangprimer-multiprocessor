@@ -23,27 +23,25 @@
 
 module FourPortArray(
     output [7:0] DataBus0,
-    output [7:0] DataBus1,
-    output [7:0] DataBus2,
-    output [7:0] DataBus3,
+//    output [7:0] DataBus1,
+//    output [7:0] DataBus2,
+//    output [7:0] DataBus3,
     input [7:0] AddressBus0,
-    input [7:0] AddressBus1,
-    input [7:0] AddressBus2,
-    input [7:0] AddressBus3,
+//    input [7:0] AddressBus1,
+//    input [7:0] AddressBus2,
+//    input [7:0] AddressBus3,
     input reset
     );
 
   reg [7:0] Data[255:0];
 
   assign DataBus0 = Data[AddressBus0];
-  assign DataBus1 = Data[AddressBus1];
-  assign DataBus2 = Data[AddressBus2];
-  assign DataBus3 = Data[AddressBus3];	 
+//  assign DataBus1 = Data[AddressBus1];
+//  assign DataBus2 = Data[AddressBus2];
+//  assign DataBus3 = Data[AddressBus3];	 
 	 
  
-  always @ reset
-  if (reset==0)
-    begin
+  always @(negedge reset) begin
       Data[  0] <= 0;    
       Data[  1] <= 1;
       Data[  2] <= 2;    

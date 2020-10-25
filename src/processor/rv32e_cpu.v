@@ -60,7 +60,7 @@ module rv32e_cpu(
     wire [4:0]  rs2      = instruction[24:20];                          // source register 2
     wire [6:0]  funct7   = instruction[31:25];                          // operation selector
     wire [11:0] i_imm    = instruction[31:20];                          // I-type immediate (OP-IMM)
-    wire [19:0] u_imm    = instruction[31:12];                          // U-type immediate (LUI, AUIPC)
+//    wire [19:0] u_imm    = instruction[31:12];                          // U-type immediate (LUI, AUIPC)
     wire [19:0] j_imm    = instruction[31:12];                          // J-type immediate offset (JAL)
     wire [11:0] b_imm    = {instruction[31:25], instruction[11:7]};     // B-type immediate offset (BRANCH)
     wire [11:0] s_imm    = {instruction[31:25], instruction[11:7]};     // S-type immediate (STORE)
@@ -127,18 +127,18 @@ module rv32e_cpu(
                             operand1 <= rs1 == 0 ? x0 : x[rs1];
                             operand2 <= $signed(i_imm);
                         end
-                        `OP_LUI, `OP_AUIPC:
-                            result <= {u_imm, 12'b0};
+//                        `OP_LUI, `OP_AUIPC:
+//                            result <= {u_imm, 12'b0};
                         `OP_OP: begin
                             operand1 <= rs1 == 0 ? x0 : x[rs1];
                             operand2 <= rs2 == 0 ? x0 : x[rs2];
                         end
                         `OP_JAL:
                             offset <= $signed({j_imm, 1'b0});
-                        `OP_JALR: begin
-                            operand1 <= rs1 == 0 ? x0 : x[rs1];
-                            offset   <= $signed(i_imm);
-                        end
+//                        `OP_JALR: begin
+//                            operand1 <= rs1 == 0 ? x0 : x[rs1];
+//                            offset   <= $signed(i_imm);
+//                        end
                         `OP_BRANCH: begin
                             operand1 <= rs1 == 0 ? x0 : x[rs1];
                             operand2 <= rs2 == 0 ? x0 : x[rs2];
@@ -166,36 +166,36 @@ module rv32e_cpu(
                         end
                         `OP_OP_IMM: begin
                             if (funct3 == `F3_ADDI)       result <= operand1 + operand2;
-                            else if (funct3 == `F3_SLTI)  result <= $signed(operand1) < $signed(operand2);
-                            else if (funct3 == `F3_SLTIU) result <= operand1 < operand2;
-                            else if (funct3 == `F3_XORI)  result <= operand1 ^ operand2;
+//                            else if (funct3 == `F3_SLTI)  result <= $signed(operand1) < $signed(operand2);
+//                            else if (funct3 == `F3_SLTIU) result <= operand1 < operand2;
+//                            else if (funct3 == `F3_XORI)  result <= operand1 ^ operand2;
                             else if (funct3 == `F3_ORI)   result <= operand1 | operand2;
                             else if (funct3 == `F3_ANDI)  result <= operand1 & operand2;
                             else if (funct3 == `F3_SLLI)  result <= operand1 << operand2[4:0];
-                            else if (funct3 == `F3_SRLI_SRAI)
-                                if (operand2[10])   result <= $signed(operand1) >>> operand2[4:0];
-                                else                result <= operand1 >> operand2[4:0];
+//                            else if (funct3 == `F3_SRLI_SRAI)
+//                                if (operand2[10])   result <= $signed(operand1) >>> operand2[4:0];
+//                                else                result <= operand1 >> operand2[4:0];
                             state <= `ST_WRITE_BACK;
                         end
-                        `OP_AUIPC: begin
-                            result <= result + pc;
-                            state <= `ST_WRITE_BACK;
-                        end
+//                        `OP_AUIPC: begin
+//                            result <= result + pc;
+//                            state <= `ST_WRITE_BACK;
+//                        end
                         `OP_OP: begin
                             if (funct7 == `F7_30_0) begin
                                     if (funct3 == `F3_ADD)       result <= operand1 + operand2;
-                                    else if (funct3 == `F3_SLT)  result <= $signed(operand1) < $signed(operand2);
-                                    else if (funct3 == `F3_SLTU) result <= operand1 < operand2;
-                                    else if (funct3 == `F3_XOR)  result <= operand1 ^ operand2;
-                                    else if (funct3 == `F3_OR)   result <= operand1 | operand2;
-                                    else if (funct3 == `F3_AND)  result <= operand1 & operand2;
-                                    else if (funct3 == `F3_SLL)  result <= operand1 << operand2[4:0];
-                                    else if (funct3 == `F3_SRL)  result <= operand1 >> operand2[4:0];
+//                                    else if (funct3 == `F3_SLT)  result <= $signed(operand1) < $signed(operand2);
+//                                    else if (funct3 == `F3_SLTU) result <= operand1 < operand2;
+//                                    else if (funct3 == `F3_XOR)  result <= operand1 ^ operand2;
+//                                    else if (funct3 == `F3_OR)   result <= operand1 | operand2;
+//                                    else if (funct3 == `F3_AND)  result <= operand1 & operand2;
+//                                    else if (funct3 == `F3_SLL)  result <= operand1 << operand2[4:0];
+//                                    else if (funct3 == `F3_SRL)  result <= operand1 >> operand2[4:0];
                             end
-                            else if (funct7 == `F7_30_1) begin
-                                    if (funct3 == `F3_SUB)       result <= $signed(operand1) - $signed(operand2);
-                                    else if (funct3 == `F3_SRA)  result <= $signed(operand1) >>> operand2[4:0];
-                            end
+//                            else if (funct7 == `F7_30_1) begin
+//                                    if (funct3 == `F3_SUB)       result <= $signed(operand1) - $signed(operand2);
+//                                    else if (funct3 == `F3_SRA)  result <= $signed(operand1) >>> operand2[4:0];
+//                            end
                             state <= `ST_WRITE_BACK;
                         end
                         `OP_JAL: begin
@@ -203,11 +203,11 @@ module rv32e_cpu(
                             pc <= pc + offset;
                             state <= `ST_FETCH;
                         end
-                        `OP_JALR: begin
-                            if (rd != 0) x[rd] <= pc + 4;
-                            pc <= (operand1 + offset) & 32'b11111111111111111111111111111110;
-                            state <= `ST_FETCH;
-                        end
+//                        `OP_JALR: begin
+//                            if (rd != 0) x[rd] <= pc + 4;
+//                            pc <= (operand1 + offset) & 32'b11111111111111111111111111111110;
+//                            state <= `ST_FETCH;
+//                        end
                         `OP_BRANCH: begin
                             case (funct3)
                                 `F3_BEQ:
@@ -222,12 +222,12 @@ module rv32e_cpu(
                                 `F3_BGE:
                                     if ($signed(operand1) >= $signed(operand2)) pc <= pc + offset;
                                     else pc <= pc + 4;
-                                `F3_BLTU:
-                                    if (operand1 < operand2) pc <= pc + offset;
-                                    else pc <= pc + 4;
-                                `F3_BGEU:
-                                    if (operand1 >= operand2) pc <= pc + offset;
-                                    else pc <= pc + 4;
+//                                `F3_BLTU:
+//                                    if (operand1 < operand2) pc <= pc + offset;
+//                                    else pc <= pc + 4;
+//                                `F3_BGEU:
+//                                    if (operand1 >= operand2) pc <= pc + offset;
+//                                    else pc <= pc + 4;
                                 default:
                                     pc <= pc + 4;
                             endcase
@@ -239,7 +239,7 @@ module rv32e_cpu(
                 end
                 `ST_WRITE_BACK: begin
                     case (opcode)
-                        `OP_LOAD, `OP_OP_IMM, `OP_OP, `OP_LUI, `OP_AUIPC:
+                        `OP_LOAD, `OP_OP_IMM, `OP_OP: //, `OP_LUI, `OP_AUIPC:
                             if (rd != 0) x[rd] <= result;
                         default:    // `OP_STORE
                             write_signal_reg <= 0;

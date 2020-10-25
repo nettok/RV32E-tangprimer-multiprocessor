@@ -21,7 +21,7 @@ module rv32e_cpu(
     output [31:0] mem_addr_bus
 );
     // registers (RV32E has 16 registers (x0-x15))
-    reg  [31:0] x [15:1];       // x1-x15 are general purpose  (x0 is defined below as it is hardwired to 0)
+    reg  [31:0] x [5:1];       // x1-x15 are general purpose  (x0 is defined below as it is hardwired to 0)
     reg  [31:0] pc;
 
     // registers wiring
@@ -32,16 +32,16 @@ module rv32e_cpu(
     wire [31:0] x3 = x[3];
     wire [31:0] x4 = x[4];
     wire [31:0] x5 = x[5];
-    wire [31:0] x6 = x[6];
-    wire [31:0] x7 = x[7];
-    wire [31:0] x8 = x[8];
-    wire [31:0] x9 = x[9];
-    wire [31:0] x10 = x[10];
-    wire [31:0] x11 = x[11];
-    wire [31:0] x12 = x[12];
-    wire [31:0] x13 = x[13];
-    wire [31:0] x14 = x[14];
-    wire [31:0] x15 = x[15];
+//    wire [31:0] x6 = x[6];
+//    wire [31:0] x7 = x[7];
+//    wire [31:0] x8 = x[8];
+//    wire [31:0] x9 = x[9];
+//    wire [31:0] x10 = x[10];
+//    wire [31:0] x11 = x[11];
+//    wire [31:0] x12 = x[12];
+//    wire [31:0] x13 = x[13];
+//    wire [31:0] x14 = x[14];
+//    wire [31:0] x15 = x[15];
 
     assign program_addr_bus = pc;
 
@@ -91,16 +91,16 @@ module rv32e_cpu(
             x[3]  <= 0;
             x[4]  <= 0;
             x[5]  <= 0;
-            x[6]  <= 0;
-            x[7]  <= 0;
-            x[8]  <= 0;
-            x[9]  <= 0;
-            x[10] <= 0;
-            x[11] <= 0;
-            x[12] <= 0;
-            x[13] <= 0;
-            x[14] <= 0;
-            x[15] <= 0;
+//            x[6]  <= 0;
+//            x[7]  <= 0;
+//            x[8]  <= 0;
+//            x[9]  <= 0;
+//            x[10] <= 0;
+//            x[11] <= 0;
+//            x[12] <= 0;
+//            x[13] <= 0;
+//            x[14] <= 0;
+//            x[15] <= 0;
 
             operand1 <= 0;
             operand2 <= 0;
@@ -256,16 +256,16 @@ module rv32e_cpu(
                     x[3]  <= 0;
                     x[4]  <= 0;
                     x[5]  <= 0;
-                    x[6]  <= 0;
-                    x[7]  <= 0;
-                    x[8]  <= 0;
-                    x[9]  <= 0;
-                    x[10] <= 0;
-                    x[11] <= 0;
-                    x[12] <= 0;
-                    x[13] <= 0;
-                    x[14] <= 0;
-                    x[15] <= 0;
+//                    x[6]  <= 0;
+//                    x[7]  <= 0;
+//                    x[8]  <= 0;
+//                    x[9]  <= 0;
+//                    x[10] <= 0;
+//                    x[11] <= 0;
+//                    x[12] <= 0;
+//                    x[13] <= 0;
+//                    x[14] <= 0;
+//                    x[15] <= 0;
 
                     operand1 <= 0;
                     operand2 <= 0;

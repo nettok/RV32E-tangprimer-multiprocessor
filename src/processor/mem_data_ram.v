@@ -13,7 +13,9 @@ module mem_data_ram(
 
     // memory-mapped IO ports
     input  [7:0] i0,
-    output [7:0] o0, o1, o2
+    output [7:0] o0,
+    output [7:0] o1,
+    output [7:0] o2
 );
 
     reg [7:0] mem [11:0];

@@ -25,38 +25,66 @@ module app(
 	output wire segmentF,
 	output wire segmentG
 );
-    wire [31:0] program_addr_bus;
-    wire [31:0] program_data_bus;
+    wire [31:0] program_addr_bus0;
+    wire [31:0] program_data_bus0;
+    
+    wire [31:0] program_addr_bus1;
+    wire [31:0] program_data_bus1;
     
     assign rgb_led = 3'b111;
     
-    wire [7:0] i0, o0, o1, o2;
+    wire [7:0] soc0_i0, soc0_o0, soc0_o1, soc0_o2;
+    wire [7:0] soc1_i0, soc1_o0, soc1_o1, soc1_o2;
+    
+    wire [7:0] soc0_work_array_address;
+    wire [7:0] soc1_work_array_address;
+    
+    assign soc0_work_array_address = {1'b0, soc0_o0[6:0]};
+    assign soc1_work_array_address = {1'b1, soc1_o0[6:0]};
     
     FourPortArray FourPortArray0(
 	    .reset(reset),
-	    .DataBus0(i0),
-	    .AddressBus0(o0)
+	    .DataBus0(soc0_i0),
+	    .AddressBus0(soc0_work_array_address),
+	    .DataBus1(soc1_i0),
+	    .AddressBus1(soc1_work_array_address)
     );
 
     rv32e_soc rv32e_soc0(
         .clk(clk),
         .reset(reset),
-        .program_addr_bus(program_addr_bus),
-        .program_data_bus(program_data_bus),
-        .i0(i0),
-        .o0(o0), .o1(o1), .o2(o2)
+        .program_addr_bus(program_addr_bus0),
+        .program_data_bus(program_data_bus0),
+        .i0(soc0_i0),
+        .o0(soc0_o0), .o1(soc0_o1), .o2(soc0_o2)
+    );
+    
+    rv32e_soc rv32e_soc1(
+        .clk(clk),
+        .reset(reset),
+        .program_addr_bus(program_addr_bus1),
+        .program_data_bus(program_data_bus1),
+        .i0(soc1_i0),
+        .o0(soc1_o0), .o1(soc1_o1), .o2(soc1_o2)
     );
 
     program_rom program_rom0(
     	.reset(reset),
-        .addr_bus(program_addr_bus),
-        .data_bus(program_data_bus)
+        .addr_bus0(program_addr_bus0),
+        .data_bus0(program_data_bus0),
+        .addr_bus1(program_addr_bus1),
+        .data_bus1(program_data_bus1)
     );
+    
+    // result adder
+    
+    wire [7:0] result;
+    assign result = soc0_o1 + soc1_o1;
     
     // cycles counter
     
     reg [15:0] cycles_counter;
-    wire done = o2[0];
+    wire done = soc0_o2[0] & soc1_o2[0];
     
     always @(posedge clk) begin
     	if (reset == 0)  cycles_counter <= 0;
@@ -70,8 +98,8 @@ module app(
     assign display_output = {
 	    display_switch ? cycles_counter[15:12] : {3'b000, done},
 	  	display_switch ? cycles_counter[11:8]  : 4'b0000,
-	  	display_switch ? cycles_counter[7:4]   : o1[7:4],
-	  	display_switch ? cycles_counter[3:0]   : o1[3:0]
+	  	display_switch ? cycles_counter[7:4]   : result[7:4],
+	  	display_switch ? cycles_counter[3:0]   : result[3:0]
     };
     
     // Clock is 24Mhz

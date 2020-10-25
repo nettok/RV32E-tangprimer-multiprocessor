@@ -13,7 +13,9 @@ module rv32e_soc(
 
     // memory-mapped IO ports
     input  [7:0] i0,
-    output [7:0] o0, o1, o2
+    output [7:0] o0,
+    output [7:0] o1,
+    output [7:0] o2
 );
 
     wire [31:0] mem_read_data_bus;

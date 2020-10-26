@@ -8,13 +8,21 @@ module program_rom(
     output [31:0] data_bus0,
 
     input  [31:0] addr_bus1,
-    output [31:0] data_bus1    
+    output [31:0] data_bus1,
+    
+    input  [31:0] addr_bus2,
+    output [31:0] data_bus2,
+    
+    input  [31:0] addr_bus3,
+    output [31:0] data_bus3
 );
 
     reg [31:0] mem [135:0];
 
     assign data_bus0 = mem[addr_bus0/4];  // byte-addressable with forced 32-bit aligned access
     assign data_bus1 = mem[addr_bus1/4];
+    assign data_bus2 = mem[addr_bus2/4];
+    assign data_bus3 = mem[addr_bus3/4];
     
     // x2: count
 	// x3: num
@@ -182,7 +190,8 @@ module program_rom(
 		
 																				// .L12:
 		//mem[0129] <= {12'd256, 5'd0, `F3_ADDI, 5'd5, `OP_OP_IMM};				// ADDI x5, x0, 256		// work_address != 256 --> .L11
-		mem[0129] <= {12'd128, 5'd0, `F3_ADDI, 5'd5, `OP_OP_IMM};				// ADDI x5, x0, 128		// work_address != 128 --> .L11
+		//mem[0129] <= {12'd128, 5'd0, `F3_ADDI, 5'd5, `OP_OP_IMM};				// ADDI x5, x0, 128		// work_address != 128 --> .L11
+		mem[0129] <= {12'd64, 5'd0, `F3_ADDI, 5'd5, `OP_OP_IMM};				// ADDI x5, x0, 64		// work_address != 64 --> .L11
 
 		mem[0130] <= {7'b1111000, 5'd5, 5'd4, `F3_BNE, 5'b00100, `OP_BRANCH};	// BNE  x4, x5, .L11	// (4-130)*2=-252=0b111100000100
 		

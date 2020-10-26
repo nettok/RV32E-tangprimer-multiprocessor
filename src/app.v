@@ -27,27 +27,40 @@ module app(
 );
     wire [31:0] program_addr_bus0;
     wire [31:0] program_data_bus0;
-    
     wire [31:0] program_addr_bus1;
     wire [31:0] program_data_bus1;
+    wire [31:0] program_addr_bus2;
+    wire [31:0] program_data_bus2;
+    wire [31:0] program_addr_bus3;
+    wire [31:0] program_data_bus3;
     
     assign rgb_led = 3'b111;
     
     wire [7:0] soc0_i0, soc0_o0, soc0_o1, soc0_o2;
     wire [7:0] soc1_i0, soc1_o0, soc1_o1, soc1_o2;
+  	wire [7:0] soc2_i0, soc2_o0, soc2_o1, soc2_o2;
+  	wire [7:0] soc3_i0, soc3_o0, soc3_o1, soc3_o2;
     
     wire [7:0] soc0_work_array_address;
     wire [7:0] soc1_work_array_address;
+    wire [7:0] soc2_work_array_address;
+    wire [7:0] soc3_work_array_address;
     
-    assign soc0_work_array_address = {1'b0, soc0_o0[6:0]};
-    assign soc1_work_array_address = {1'b1, soc1_o0[6:0]};
+    assign soc0_work_array_address = {2'b00, soc0_o0[5:0]};
+    assign soc1_work_array_address = {2'b01, soc1_o0[5:0]};
+    assign soc2_work_array_address = {2'b10, soc2_o0[5:0]};
+    assign soc3_work_array_address = {2'b11, soc3_o0[5:0]};
     
     FourPortArray FourPortArray0(
 	    .reset(reset),
 	    .DataBus0(soc0_i0),
 	    .AddressBus0(soc0_work_array_address),
 	    .DataBus1(soc1_i0),
-	    .AddressBus1(soc1_work_array_address)
+	    .AddressBus1(soc1_work_array_address),
+	    .DataBus2(soc2_i0),
+	    .AddressBus2(soc2_work_array_address),
+	    .DataBus3(soc3_i0),
+	    .AddressBus3(soc3_work_array_address)
     );
 
     rv32e_soc rv32e_soc0(
@@ -67,24 +80,46 @@ module app(
         .i0(soc1_i0),
         .o0(soc1_o0), .o1(soc1_o1), .o2(soc1_o2)
     );
+    
+    rv32e_soc rv32e_soc2(
+        .clk(clk),
+        .reset(reset),
+        .program_addr_bus(program_addr_bus2),
+        .program_data_bus(program_data_bus2),
+        .i0(soc2_i0),
+        .o0(soc2_o0), .o1(soc2_o1), .o2(soc2_o2)
+    );
+    
+    rv32e_soc rv32e_soc3(
+        .clk(clk),
+        .reset(reset),
+        .program_addr_bus(program_addr_bus3),
+        .program_data_bus(program_data_bus3),
+        .i0(soc3_i0),
+        .o0(soc3_o0), .o1(soc3_o1), .o2(soc3_o2)
+    );
 
     program_rom program_rom0(
     	.reset(reset),
         .addr_bus0(program_addr_bus0),
         .data_bus0(program_data_bus0),
         .addr_bus1(program_addr_bus1),
-        .data_bus1(program_data_bus1)
+        .data_bus1(program_data_bus1),
+        .addr_bus2(program_addr_bus2),
+        .data_bus2(program_data_bus2),
+        .addr_bus3(program_addr_bus3),
+        .data_bus3(program_data_bus3)
     );
     
     // result adder
     
     wire [7:0] result;
-    assign result = soc0_o1 + soc1_o1;
+    assign result = soc0_o1 + soc1_o1 + soc2_o1 + soc3_o1;
     
     // cycles counter
     
     reg [15:0] cycles_counter;
-    wire done = soc0_o2[0] & soc1_o2[0];
+    wire done = soc0_o2[0] & soc1_o2[0] & soc2_o2[0] & soc3_o2[0];
     
     always @(posedge clk) begin
     	if (reset == 0)  cycles_counter <= 0;
